@@ -47,5 +47,5 @@ SS.main.addSceneContent = function(scene) {
 	
 	scene.add(new SS.planet.Planet(5));
 	
-	scene.add(new SS.starbox.StarBox(4000));
+	//scene.add(new SS.starbox.StarBox(4000));
 }
