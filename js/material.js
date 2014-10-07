@@ -5,10 +5,13 @@ SS.material.shaderMaterial = function() {
 	var vertexShader = "\
 		varying vec3 vNormal;\
 		varying vec3 cameraVector;\
+		varying vec3 vPosition;\
 		\
 		void main() {\
 			vNormal = normal;\
-			cameraVector = cameraPosition - position;\
+			vec4 vPosition4 = modelMatrix * vec4( position, 1.0 );\
+			vPosition = vPosition4.xyz;\
+			cameraVector = cameraPosition - vPosition;\
 			\
 			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\
 		}\
@@ -18,11 +21,12 @@ SS.material.shaderMaterial = function() {
 		uniform vec3 pointLightPosition;\
 		\
 		varying vec3 vNormal;\
+		varying vec3 vPosition;\
 		varying vec3 cameraVector;\
 		\
 		void main() {\
 			float PI = 3.14159265358979323846264;\
-			vec3 light = pointLightPosition;\
+			vec3 light = pointLightPosition - vPosition;\
 			vec3 cameraDir = normalize(cameraVector);\
 			\
 			light = normalize(light);\
