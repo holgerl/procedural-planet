@@ -1,17 +1,19 @@
 window.SS = window.SS || {};
 SS.material = SS.material || {};
 
-SS.material.shaderMaterial = function() {
+SS.material.shaderMaterial = function(index) {
 	var vertexShader = "\
 		varying vec3 vNormal;\
 		varying vec3 cameraVector;\
 		varying vec3 vPosition;\
+		varying vec2 vUv;\
 		\
 		void main() {\
 			vNormal = normal;\
 			vec4 vPosition4 = modelMatrix * vec4( position, 1.0 );\
 			vPosition = vPosition4.xyz;\
 			cameraVector = cameraPosition - vPosition;\
+			vUv = uv;\
 			\
 			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\
 		}\
@@ -19,10 +21,12 @@ SS.material.shaderMaterial = function() {
 	
 	var fragmentShader = "\
 		uniform vec3 pointLightPosition;\
+		uniform sampler2D map;\
 		\
 		varying vec3 vNormal;\
 		varying vec3 vPosition;\
 		varying vec3 cameraVector;\
+		varying vec2 vUv;\
 		\
 		void main() {\
 			float PI = 3.14159265358979323846264;\
@@ -43,12 +47,17 @@ SS.material.shaderMaterial = function() {
 			dProd += invertedViewAngle * 0.5 * (max(-0.35, dot(vNormal, light)) + 0.35);\
 			dProd *= 0.7 + pow(invertedViewAngle/(PI/2.0), 2.0);\
 			\
-			gl_FragColor = vec4(dProd, dProd, dProd, dProd/2.0);\
+			dProd *= 0.5;\
+			vec4 atmColor = vec4(dProd, dProd, dProd, 1.0);\
+			\
+			vec4 texelColor = texture2D( map, vUv ) * min(asin(lightAngle), 1.0);\
+			gl_FragColor = texelColor + min(atmColor, 0.8);\
 		}\
 	";
 	
 	var uniforms = {
-		"pointLightPosition": {"type": "v3", "value": sunLight.position}
+		"pointLightPosition": {"type": "v3", "value": sunLight.position},
+		"map": {"type": "t", "value": SS.spheremap.createMap(index, SS.planet.planetScalarField, 256)}
 	};
 
 	return new THREE.ShaderMaterial({

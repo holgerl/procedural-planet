@@ -42,9 +42,6 @@ SS.main.addSceneContent = function(scene) {
 	sunLight.position.set(100, 0, 0);
 	scene.add(sunLight);
 	
-	var material = SS.material.shaderMaterial();
-	scene.add(new THREE.Mesh(new THREE.SphereGeometry(5.03, 128, 64), material));
-	
 	scene.add(new SS.planet.Planet(5));
 	
 	//scene.add(new SS.starbox.StarBox(4000));

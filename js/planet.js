@@ -9,8 +9,8 @@ SS.planet.Planet = function(planetRadius) {
 	var sphere = new SS.spheremap.Sphere(
 		SS.planet.planetScalarField, 
 		planetRadius, 
-		function() {
-			return new THREE.MeshPhongMaterial({shininess: 0, specular: new THREE.Color(0x000000)});
+		function(index) {
+			return SS.material.shaderMaterial(index);
 		},
 		maxDetail,
 		true
