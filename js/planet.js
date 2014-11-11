@@ -3,14 +3,14 @@ SS.planet = SS.planet || {};
 	
 var maxDetail = SS.lowgraphics ? 16 : 128; //256 = 11 seconds (before), 512 = 5 seconds (now)
 
-SS.planet.Planet = function(planetRadius, rtTexture) {
+SS.planet.Planet = function(planetRadius, rtTextures) {
 	THREE.Object3D.call(this);
 	
 	var sphere = new SS.spheremap.Sphere(
 		SS.planet.planetScalarField, 
 		planetRadius, 
-		function(map) {
-			return SS.material.shaderMaterial(map, rtTexture);
+		function(map, index) {
+			return SS.material.shaderMaterial(map, rtTextures[index]);
 		},
 		maxDetail,
 		true

@@ -18,17 +18,21 @@ SS.main.main = function() {
 	SS.util.addResizeListener();
 	SS.main.addSceneContent(scene);
 	
-	rtTexture = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, { minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter, format: THREE.RGBFormat } );
-	cameraRTT = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, -10000, 10000 );
-	cameraRTT.position.z = 100;
-	sceneRTT = new THREE.Scene();
-	var plane = new THREE.PlaneGeometry( window.innerWidth, window.innerHeight );
-	quad = new THREE.Mesh( plane, new SS.material.shaderMaterial2());
-	quad.position.z = -100;
-	sceneRTT.add( quad );
-	renderer.render( sceneRTT, cameraRTT, rtTexture, true );
+	rtTextures = [];
+	for (var index = 0; index < 6; index++) {
+		rtTexture = new THREE.WebGLRenderTarget( 256, 256, { minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter, format: THREE.RGBFormat } );
+		cameraRTT = new THREE.OrthographicCamera( 256 / -2, 256 / 2, 256 / 2, 256 / -2, -10000, 10000 );
+		cameraRTT.position.z = 100;
+		sceneRTT = new THREE.Scene();
+		var plane = new THREE.PlaneGeometry( 256, 256 );
+		quad = new THREE.Mesh( plane, new SS.material.shaderMaterial2(index));
+		quad.position.z = -100;
+		sceneRTT.add( quad );
+		renderer.render( sceneRTT, cameraRTT, rtTexture, true );
+		rtTextures.push(rtTexture);
+	}
 	
-	scene.add(new SS.planet.Planet(5, rtTexture))
+	scene.add(new SS.planet.Planet(5, rtTextures));
 
 	SS.main.render();
 }

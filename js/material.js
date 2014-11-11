@@ -75,6 +75,7 @@ SS.material.shaderMaterial = function(map, rtTexture) {
 			\
 			vec4 texelColor = texture2D(map, vUv) * min(asin(lightAngle), 1.0);\
 			gl_FragColor = texelColor + min(atmColor, 0.8);\
+			gl_FragColor = texture2D(map, vUv);\
 		}\
 	";
 	
@@ -92,7 +93,7 @@ SS.material.shaderMaterial = function(map, rtTexture) {
 	});
 }
 
-SS.material.shaderMaterial2 = function() {
+SS.material.shaderMaterial2 = function(index) {
 	var vertexShader = "\
 		varying vec2 vUv;\
 		\
@@ -102,17 +103,44 @@ SS.material.shaderMaterial2 = function() {
 		}\
 	";
 	
-	var fragmentShader = "\
-		varying vec2 vUv;\
-		uniform sampler2D tDiffuse;\
+		var fragmentShader = "\
+		varying vec2 vUv;\n\
+		uniform int index;\n\
 		\
-		void main() {\
-			gl_FragColor = vec4(vUv.x, vUv.y, 1.0, 1.0);\
+		vec3 scalarField(float x, float y, float z) {\n\
+			return vec3(x, y, z);\n\
+		}\n\
+		\
+		vec3 getSphericalCoord(int index, float x, float y, float width) {\n\
+			width /= 2.0;\n\
+			x -= width;\n\
+			y -= width;\n\
+			vec3 coord = vec3(0.0, 0.0, 0.0);\n\
+			\
+			if (index == 0) {coord.x=width; coord.y=-y; coord.z=-x;}\n\
+			else if (index == 1) {coord.x=-width; coord.y=-y; coord.z=x;}\n\
+			else if (index == 3) {coord.x=x; coord.y=width; coord.z=y;}\n\
+			else if (index == 2) {coord.x=x; coord.y=-width; coord.z=-y;}\n\
+			else if (index == 4) {coord.x=x; coord.y=-y; coord.z=width;}\n\
+			else if (index == 5) {coord.x=-x; coord.y=-y; coord.z=-width;}\n\
+			\
+			return normalize(coord);\n\
+		}\
+		\
+		void main() {\n\
+			float x = vUv.x;\n\
+			float y = vUv.y;\n\
+			vec3 sphericalCoord = getSphericalCoord(index, x*256.0, y*256.0, 256.0);\n\
+			\
+			vec3 color = scalarField(sphericalCoord.x, sphericalCoord.y, sphericalCoord.z);\n\
+			\
+			gl_FragColor = vec4(color.x, color.y, color.z, 1.0);\n\
 		}\
 	";
 	
 	var uniforms = {
-		tDiffuse: { type: "t", value: rtTexture }
+		tDiffuse: { type: "t", value: rtTexture },
+		index: { type: "i", value: index }
 	};
 
 	return new THREE.ShaderMaterial({

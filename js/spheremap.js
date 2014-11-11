@@ -31,7 +31,7 @@ SS.spheremap.Sphere = function(scalarField, radius, materialCallback, resolution
 	var materialArray = [];
 	for (var i = 0; i < 6; i++) {
         var map = SS.spheremap.createMap(i, scalarField, resolution);
-		var faceMaterial = materialCallback(map);
+		var faceMaterial = materialCallback(map, i);
 		materialArray.push(faceMaterial);
 	}
 		
