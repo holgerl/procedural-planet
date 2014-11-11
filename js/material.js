@@ -1,7 +1,7 @@
 window.SS = window.SS || {};
 SS.material = SS.material || {};
 
-SS.material.shaderMaterial = function(map) {
+SS.material.shaderMaterial = function(map, rtTexture) {
 	var vertexShader = "\
 		varying vec3 vNormal;\
 		varying vec3 cameraVector;\
@@ -80,7 +80,7 @@ SS.material.shaderMaterial = function(map) {
 	
 	var uniforms = {
 		"pointLightPosition": {"type": "v3", "value": sunLight.position},
-		"map": {"type": "t", "value": map},
+		"map": {"type": "t", "value": rtTexture},
 		"normalMap": {"type": "t", "value": SS.util.heightToNormalMap(map)}
 	};
 
@@ -89,5 +89,37 @@ SS.material.shaderMaterial = function(map) {
 		vertexShader: vertexShader,
 		fragmentShader: fragmentShader,
 		transparent: true
+	});
+}
+
+SS.material.shaderMaterial2 = function() {
+	var vertexShader = "\
+		varying vec2 vUv;\
+		\
+		void main() {\
+			vUv = uv;\
+			gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\
+		}\
+	";
+	
+	var fragmentShader = "\
+		varying vec2 vUv;\
+		uniform sampler2D tDiffuse;\
+		\
+		void main() {\
+			gl_FragColor = vec4(vUv.x, vUv.y, 1.0, 1.0);\
+		}\
+	";
+	
+	var uniforms = {
+		tDiffuse: { type: "t", value: rtTexture }
+	};
+
+	return new THREE.ShaderMaterial({
+		uniforms: uniforms,
+		vertexShader: vertexShader,
+		fragmentShader: fragmentShader,
+		transparent: true,
+		depthWrite: false
 	});
 }

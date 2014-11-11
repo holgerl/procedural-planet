@@ -17,6 +17,18 @@ SS.main.main = function() {
 	
 	SS.util.addResizeListener();
 	SS.main.addSceneContent(scene);
+	
+	rtTexture = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, { minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter, format: THREE.RGBFormat } );
+	cameraRTT = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, -10000, 10000 );
+	cameraRTT.position.z = 100;
+	sceneRTT = new THREE.Scene();
+	var plane = new THREE.PlaneGeometry( window.innerWidth, window.innerHeight );
+	quad = new THREE.Mesh( plane, new SS.material.shaderMaterial2());
+	quad.position.z = -100;
+	sceneRTT.add( quad );
+	renderer.render( sceneRTT, cameraRTT, rtTexture, true );
+	
+	scene.add(new SS.planet.Planet(5, rtTexture))
 
 	SS.main.render();
 }
@@ -42,7 +54,7 @@ SS.main.addSceneContent = function(scene) {
 	sunLight.position.set(100, 0, 0);
 	scene.add(sunLight);
 	
-	scene.add(new SS.planet.Planet(5));
+	//scene.add(new SS.planet.Planet(5));
 	
 	//scene.add(new SS.starbox.StarBox(4000));
 }
