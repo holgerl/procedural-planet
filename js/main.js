@@ -19,12 +19,13 @@ SS.main.main = function() {
 	SS.main.addSceneContent(scene);
 	
 	rtTextures = [];
+	var resolution = 1024;
 	for (var index = 0; index < 6; index++) {
-		rtTexture = new THREE.WebGLRenderTarget( 256, 256, { minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter, format: THREE.RGBFormat } );
-		cameraRTT = new THREE.OrthographicCamera( 256 / -2, 256 / 2, 256 / 2, 256 / -2, -10000, 10000 );
+		rtTexture = new THREE.WebGLRenderTarget( resolution, resolution, { minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter, format: THREE.RGBFormat } );
+		cameraRTT = new THREE.OrthographicCamera( resolution / -2, resolution / 2, resolution / 2, resolution / -2, -10000, 10000 );
 		cameraRTT.position.z = 100;
 		sceneRTT = new THREE.Scene();
-		var plane = new THREE.PlaneGeometry( 256, 256 );
+		var plane = new THREE.PlaneGeometry( resolution, resolution );
 		quad = new THREE.Mesh( plane, new SS.material.shaderMaterial2(index));
 		quad.position.z = -100;
 		sceneRTT.add( quad );

@@ -1,7 +1,7 @@
 window.SS = window.SS || {};
 SS.planet = SS.planet || {};
 	
-var maxDetail = SS.lowgraphics ? 16 : 128; //256 = 11 seconds (before), 512 = 5 seconds (now)
+var maxDetail = SS.lowgraphics ? 16 : 64; //256 = 11 seconds (before), 512 = 5 seconds (now)
 
 SS.planet.Planet = function(planetRadius, rtTextures) {
 	THREE.Object3D.call(this);
