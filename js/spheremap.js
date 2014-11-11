@@ -1,13 +1,12 @@
 window.SS = window.SS || {};
 SS.spheremap = SS.spheremap || {};
 
-SS.spheremap.Sphere = function(scalarField, radius, materialCallback, resolution, bumpMap) {
+SS.spheremap.Sphere = function(scalarField, radius, materialCallback, resolution) {
 	THREE.Object3D.call(this);
 	
 	radius = radius || 1;
 	materialCallback = materialCallback || function() {return new THREE.MeshPhongMaterial()};
 	resolution = resolution || 128;
-	bumpMap = bumpMap || false;
 	
 	var geometry = new THREE.BoxGeometry(1, 1, 1, 64, 64, 64);
 	
@@ -31,12 +30,8 @@ SS.spheremap.Sphere = function(scalarField, radius, materialCallback, resolution
 	
 	var materialArray = [];
 	for (var i = 0; i < 6; i++) {
-		var faceMaterial = materialCallback(i);
-		faceMaterial.map = SS.spheremap.createMap(i, scalarField, resolution);
-		if (bumpMap) {
-			faceMaterial.bumpMap = faceMaterial.map;
-			faceMaterial.bumpScale = 1/30;
-		}
+        var map = SS.spheremap.createMap(i, scalarField, resolution);
+		var faceMaterial = materialCallback(map);
 		materialArray.push(faceMaterial);
 	}
 		
