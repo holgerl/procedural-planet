@@ -213,9 +213,9 @@ SS.util.heightToNormalMap = function(map, intensity) {
         x = Math.min(x, width-1);
         y = Math.min(y, height-1);
         return (
-            map.image.data[(y*width+x)*3+0]/255 + 
-            map.image.data[(y*width+x)*3+1]/255 +
-            map.image.data[(y*width+x)*3+2]/255
+            map.image.data[(y*width+x)*4+0]/255 + 
+            map.image.data[(y*width+x)*4+1]/255 +
+            map.image.data[(y*width+x)*4+2]/255
         )/3*intensity;
     }
     
@@ -223,18 +223,16 @@ SS.util.heightToNormalMap = function(map, intensity) {
 
 	for (var i = 0; i < nofPixels; i++) {		
 		var x = i%width;
-		var y = Math.floor(i/width);
+		var y = height-Math.floor(i/width);
 		
         var pixel00 = new THREE.Vector3(0, 0, getHeight(x, y));
         var pixel01 = new THREE.Vector3(0, 1, getHeight(x, y+1));
         var pixel10 = new THREE.Vector3(1, 0, getHeight(x+1, y));
-        var orto = pixel10.clone().sub(pixel00).cross(pixel01.clone().sub(pixel00)).normalize();
+        var orto = pixel10.sub(pixel00).cross(pixel01.sub(pixel00)).normalize();
         
-		var color = new THREE.Color(orto.x+0.5, orto.y+0.5, -orto.z);
-        
-        normalMap.image.data[i*3+0] = color.r*255;
-		normalMap.image.data[i*3+1] = color.g*255;
-		normalMap.image.data[i*3+2] = color.b*255;
+        normalMap.image.data[i*3+0] = (orto.x+0.5)*255;
+		normalMap.image.data[i*3+1] = (orto.y+0.5)*255;
+		normalMap.image.data[i*3+2] = (-orto.z)*255;
     }
     
     return normalMap;

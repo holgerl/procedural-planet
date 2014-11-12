@@ -1,7 +1,7 @@
 window.SS = window.SS || {};
 SS.material = SS.material || {};
 
-SS.material.shaderMaterial = function(map, rtTexture) {
+SS.material.shaderMaterial = function(bumpmap, rtTexture) {
 	var vertexShader = "\
 		varying vec3 vNormal;\
 		varying vec3 cameraVector;\
@@ -75,14 +75,14 @@ SS.material.shaderMaterial = function(map, rtTexture) {
 			\
 			vec4 texelColor = texture2D(map, vUv) * min(asin(lightAngle), 1.0);\
 			gl_FragColor = texelColor + min(atmColor, 0.8);\
-			gl_FragColor = texture2D(map, vUv);\
+			/*gl_FragColor = texture2D(map, vUv);*/\
 		}\
 	";
 	
 	var uniforms = {
 		"pointLightPosition": {"type": "v3", "value": sunLight.position},
 		"map": {"type": "t", "value": rtTexture},
-		"normalMap": {"type": "t", "value": SS.util.heightToNormalMap(map)}
+		"normalMap": {"type": "t", "value": SS.util.heightToNormalMap(bumpmap)}
 	};
 
 	return new THREE.ShaderMaterial({
@@ -125,7 +125,9 @@ SS.material.shaderMaterial2 = function(index) {
 		}\n\
 		\
 		float interpolation(float a, float b, float x) {\n\
-			return  a*(1.0-x) + b*x;\n\
+			float ft = x * 3.1415927;\n\
+			float f = (1.0 - cos(ft)) * 0.5;\n\
+			return a*(1.0-f) + b*f;\n\
 		}\n\
 		\
 		float tricosine(vec3 coordFloat) {\n\
@@ -162,20 +164,26 @@ SS.material.shaderMaterial2 = function(index) {
 		vec3 scalarField(float x, float y, float z) {\n\
 			float resolution1 = 4.0;\n\
 			float resolution2 = 16.0;\n\
-			float resolution3 = 64.0;\n\
-			float resolutionMax = 1024.0;\n\
+			float resolution3 = 32.0;\n\
+			float resolution4 = 64.0;\n\
+			float resolution5 = 128.0;\n\
+			float resolutionMax = 256.0;\n\
 			\n\
 			vec3 coordFloat = vec3(0.0, 0.0, 0.0);\n\
 			\n\
 			float level1 = helper(x, y, z, resolution1);\n\
 			float level2 = helper(x, y, z, resolution2);\n\
 			float level3 = helper(x, y, z, resolution3);\n\
+			float level4 = helper(x, y, z, resolution4);\n\
+			float level5 = helper(x, y, z, resolution5);\n\
 			float levelMax = helper(x, y, z, resolutionMax);\n\
 			\n\
 			float c = 0.5;\n\
-			c *= 1.0 + level1*0.75;\n\
-			c *= 1.0 + level2*0.25;\n\
-			c *= 1.0 + level3*0.075;\n\
+			c *= 1.0 + level1*0.8;\n\
+			c *= 1.0 + level2*0.3;\n\
+			c *= 1.0 + level3*0.15;\n\
+			c *= 1.0 + level4*0.075;\n\
+			c *= 1.0 + level5*0.025;\n\
 			c *= 1.0 + levelMax*(1.0/25.0);\n\
 			\n\
 			if (c < 0.5) c *= 0.9;\n\

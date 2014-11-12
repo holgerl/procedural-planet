@@ -19,9 +19,10 @@ SS.main.main = function() {
 	SS.main.addSceneContent(scene);
 	
 	rtTextures = [];
+	maps = [];
 	var resolution = 1024;
 	for (var index = 0; index < 6; index++) {
-		rtTexture = new THREE.WebGLRenderTarget( resolution, resolution, { minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter, format: THREE.RGBFormat } );
+		rtTexture = new THREE.WebGLRenderTarget( resolution, resolution, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat } );
 		cameraRTT = new THREE.OrthographicCamera( resolution / -2, resolution / 2, resolution / 2, resolution / -2, -10000, 10000 );
 		cameraRTT.position.z = 100;
 		sceneRTT = new THREE.Scene();
@@ -31,9 +32,15 @@ SS.main.main = function() {
 		sceneRTT.add( quad );
 		renderer.render( sceneRTT, cameraRTT, rtTexture, true );
 		rtTextures.push(rtTexture);
+		
+		var buf1 = new Uint8Array(resolution * resolution * 4);
+		var gl = renderer.getContext();
+		gl.readPixels( 0, 0, resolution, resolution, gl.RGBA, gl.UNSIGNED_BYTE, buf1 );
+		buf1.needsUpdate = true;
+		maps.push({image: {data:buf1, height: resolution, width: resolution}});
 	}
 	
-	scene.add(new SS.planet.Planet(5, rtTextures));
+	scene.add(new SS.planet.Planet(5, rtTextures, maps));
 
 	SS.main.render();
 }

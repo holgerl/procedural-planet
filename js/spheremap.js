@@ -31,8 +31,7 @@ SS.spheremap.Sphere = function(scalarField, radius, materialCallback, resolution
 	var materialArray = [];
 	for (var i = 0; i < 6; i++) {
         //var map = SS.spheremap.createMap(i, scalarField, resolution);
-		var map = THREE.ImageUtils.generateDataTexture(resolution, resolution, new THREE.Color(0x000000));
-		var faceMaterial = materialCallback(map, i);
+		var faceMaterial = materialCallback(i);
 		materialArray.push(faceMaterial);
 	}
 		
