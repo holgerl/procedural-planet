@@ -1,3 +1,5 @@
+"use strict";
+
 window.SS = window.SS || {};
 SS.spheremap = SS.spheremap || {};
 

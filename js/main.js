@@ -1,8 +1,11 @@
+"use strict";
+
 window.SS = window.SS || {};
 SS.main = SS.main || {};
 
 SS.main.main = function() {
-	renderer = new THREE.WebGLRenderer({antialias: true});
+	window.renderer = new THREE.WebGLRenderer({antialias: true});
+	var renderer = window.renderer;
 	renderer.gammaInput = true;
 	renderer.gammaOutput = true;
 	renderer.setClearColor(0x000000, 1);
@@ -10,24 +13,24 @@ SS.main.main = function() {
 	renderer.domElement.setAttribute('id', 'renderer');
 	document.body.appendChild(renderer.domElement);
 	
-	scene = new THREE.Scene();
+	window.scene = new THREE.Scene();
 	var ratio = renderer.getContext().drawingBufferWidth / renderer.getContext().drawingBufferHeight;
-	camera = new THREE.PerspectiveCamera(60, ratio, 0.1, 10000);
-	editorCamera = new SS.util.EditorCamera(camera, document, 15, new THREE.Vector2(-Math.PI*(2/4),-Math.PI*(1/4)));
+	window.camera = new THREE.PerspectiveCamera(60, ratio, 0.1, 10000);
+	window.editorCamera = new SS.util.EditorCamera(camera, document, 15, new THREE.Vector2(-Math.PI*(2/4),-Math.PI*(1/4)));
 	
 	SS.util.addResizeListener();
 	SS.main.addSceneContent(scene);
 	
-	rtTextures = [];
-	maps = [];
+	var rtTextures = [];
+	var maps = [];
 	var resolution = 1024;
 	for (var index = 0; index < 6; index++) {
-		rtTexture = new THREE.WebGLRenderTarget( resolution, resolution, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat } );
-		cameraRTT = new THREE.OrthographicCamera( resolution / -2, resolution / 2, resolution / 2, resolution / -2, -10000, 10000 );
+		window.rtTexture = new THREE.WebGLRenderTarget( resolution, resolution, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat } );
+		var cameraRTT = new THREE.OrthographicCamera( resolution / -2, resolution / 2, resolution / 2, resolution / -2, -10000, 10000 );
 		cameraRTT.position.z = 100;
-		sceneRTT = new THREE.Scene();
+		var sceneRTT = new THREE.Scene();
 		var plane = new THREE.PlaneGeometry( resolution, resolution );
-		quad = new THREE.Mesh( plane, new SS.material.shaderMaterial2(index));
+		var quad = new THREE.Mesh( plane, new SS.material.shaderMaterial2(index));
 		quad.position.z = -100;
 		sceneRTT.add( quad );
 		renderer.render( sceneRTT, cameraRTT, rtTexture, true );
@@ -48,7 +51,7 @@ SS.main.main = function() {
 SS.main.render = function() {
 	requestAnimationFrame(SS.main.render);
 	
-	time = window.time || new Date().getTime();
+	window.time = window.time || new Date().getTime();
 	var newTime = new Date().getTime();
 	var diff = newTime - time;
 	if (editorCamera.mouseDown == false) {
@@ -58,11 +61,11 @@ SS.main.render = function() {
 	}
 	time = newTime;
 	
-	renderer.render(scene, camera);
+	window.renderer.render(window.scene, window.camera);
 };
 
 SS.main.addSceneContent = function(scene) {
-	sunLight = new THREE.PointLight(new THREE.Color(0xffffff), 1.0);
+	window.sunLight = new THREE.PointLight(new THREE.Color(0xffffff), 1.0);
 	sunLight.position.set(100, 0, 0);
 	scene.add(sunLight);
 	

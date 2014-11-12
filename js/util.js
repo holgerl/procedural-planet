@@ -1,3 +1,5 @@
+"use strict";
+
 window.SS = window.SS || {};
 SS.util = SS.util || {};
 
@@ -14,7 +16,7 @@ SS.util.randomFloat = function(from, to, seed) {
 }
 
 SS.util.random = function(seed) {
-	var scope = arguments.callee;
+	var scope = SS.util.random;
 	
 	scope.MAX = scope.MAX || Math.pow(2, 32);
 	scope.a = 1664525;
