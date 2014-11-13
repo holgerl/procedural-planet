@@ -16,7 +16,7 @@ SS.main.main = function() {
 	window.scene = new THREE.Scene();
 	var ratio = renderer.getContext().drawingBufferWidth / renderer.getContext().drawingBufferHeight;
 	window.camera = new THREE.PerspectiveCamera(60, ratio, 0.1, 10000);
-	window.editorCamera = new SS.util.EditorCamera(camera, document, 15, new THREE.Vector2(-Math.PI*(2/4),-Math.PI*(1/4)));
+	window.editorCamera = new SS.util.EditorCamera(camera, document, 15, new THREE.Vector2(-Math.PI*(1/4),-Math.PI*(1/4)));
 	
 	SS.util.addResizeListener();
 	SS.main.addSceneContent(scene);
@@ -55,7 +55,7 @@ SS.main.render = function() {
 	var newTime = new Date().getTime();
 	var diff = newTime - time;
 	if (editorCamera.mouseDown == false) {
-		editorCamera.cameraPos.x += diff/3000;
+		editorCamera.cameraPos.x += diff/1000*(2*3.1415)*(1/3600/24)*3000;
 		editorCamera.cameraStartPos = editorCamera.cameraPos;
 		editorCamera.rotateCamera();
 	}

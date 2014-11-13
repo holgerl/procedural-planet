@@ -97,7 +97,7 @@ SS.util.EditorCamera = function(camera, document, startRadius, cameraStartPos, o
 		});
 		
 		document.addEventListener('mousewheel', function(event) {
-			var delta = event.wheelDelta/10000;
+			var delta = event.wheelDelta/20000;
 			if (editorCamera.getScaledRadius(editorCamera.radius - delta) >= 0) {
 				editorCamera.radius -= delta;
 				editorCamera.zoomCamera();

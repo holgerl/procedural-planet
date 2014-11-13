@@ -182,11 +182,11 @@ SS.material.shaderMaterial2 = function(index) {
 			\n\
 			float c = 0.5;\n\
 			c *= 1.0 + level1*0.8;\n\
-			c *= 1.0 + level2*0.3;\n\
-			c *= 1.0 + level3*0.15;\n\
-			c *= 1.0 + level4*0.075;\n\
-			c *= 1.0 + level5*0.025;\n\
-			c *= 1.0 + levelMax*(1.0/25.0);\n\
+			c *= 1.0 + level2*0.4;\n\
+			c *= 1.0 + level3*0.2;\n\
+			c *= 1.0 + level4*0.1;\n\
+			c *= 1.0 + level5*0.05;\n\
+			c *= 1.0 + levelMax*(0.025);\n\
 			\n\
 			if (c < 0.5) c *= 0.9;\n\
 			\n\
