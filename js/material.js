@@ -3,7 +3,7 @@
 window.SS = window.SS || {};
 SS.material = SS.material || {};
 
-SS.material.shaderMaterial = function(bumpmap, rtTexture) {
+SS.material.shaderMaterial = function(textureMap, bumpMap) {
 	var vertexShader = "\
 		varying vec3 vNormal;\
 		varying vec3 cameraVector;\
@@ -83,8 +83,8 @@ SS.material.shaderMaterial = function(bumpmap, rtTexture) {
 	
 	var uniforms = {
 		"pointLightPosition": {"type": "v3", "value": sunLight.position},
-		"map": {"type": "t", "value": rtTexture},
-		"normalMap": {"type": "t", "value": SS.util.heightToNormalMap(bumpmap, 2.0)}
+		"map": {"type": "t", "value": textureMap},
+		"normalMap": {"type": "t", "value": SS.util.heightToNormalMap(bumpMap, 2.0)}
 	};
 
 	return new THREE.ShaderMaterial({

@@ -21,8 +21,8 @@ SS.main.main = function() {
 	SS.util.addResizeListener();
 	SS.main.addSceneContent(scene);
 	
-	var rtTextures = [];
-	var maps = [];
+	var textureMaps = [];
+	var bumpMaps = [];
 	var resolution = 1024;
 	for (var index = 0; index < 6; index++) {
 		window.rtTexture = new THREE.WebGLRenderTarget( resolution, resolution, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat } );
@@ -34,16 +34,16 @@ SS.main.main = function() {
 		quad.position.z = -100;
 		sceneRTT.add( quad );
 		renderer.render( sceneRTT, cameraRTT, rtTexture, true );
-		rtTextures.push(rtTexture);
+		textureMaps.push(rtTexture);
 		
 		var buf1 = new Uint8Array(resolution * resolution * 4);
 		var gl = renderer.getContext();
 		gl.readPixels( 0, 0, resolution, resolution, gl.RGBA, gl.UNSIGNED_BYTE, buf1 );
 		buf1.needsUpdate = true;
-		maps.push({image: {data:buf1, height: resolution, width: resolution}});
+		bumpMaps.push({image: {data:buf1, height: resolution, width: resolution}});
 	}
 	
-	scene.add(new SS.planet.Planet(5, rtTextures, maps));
+	scene.add(new SS.planet.Planet(5, textureMaps, bumpMaps));
 
 	SS.main.render();
 }
