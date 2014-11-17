@@ -203,8 +203,8 @@ SS.material.shaderMaterial2 = function(index) {
 			\
 			if (index == 0) {coord.x=width; coord.y=-y; coord.z=-x;}\n\
 			else if (index == 1) {coord.x=-width; coord.y=-y; coord.z=x;}\n\
-			else if (index == 3) {coord.x=x; coord.y=width; coord.z=y;}\n\
-			else if (index == 2) {coord.x=x; coord.y=-width; coord.z=-y;}\n\
+			else if (index == 2) {coord.x=x; coord.y=width; coord.z=y;}\n\
+			else if (index == 3) {coord.x=x; coord.y=-width; coord.z=-y;}\n\
 			else if (index == 4) {coord.x=x; coord.y=-y; coord.z=width;}\n\
 			else if (index == 5) {coord.x=-x; coord.y=-y; coord.z=-width;}\n\
 			\
@@ -213,7 +213,7 @@ SS.material.shaderMaterial2 = function(index) {
 		\
 		void main() {\n\
 			float x = vUv.x;\n\
-			float y = vUv.y;\n\
+			float y = 1.0 - vUv.y;\n\
 			vec3 sphericalCoord = getSphericalCoord(index, x*1024.0, y*1024.0, 1024.0);\n\
 			\
 			vec3 color = scalarField(sphericalCoord.x, sphericalCoord.y, sphericalCoord.z);\n\
