@@ -223,11 +223,7 @@ SS.material.shaderMaterial2 = function(index) {
 	";
 	
 	var uniforms = {
-		tDiffuse: { type: "t", value: rtTexture },
-		index: { type: "i", value: index }
-		//,
-		//G: { type: "t", value: textureG },
-		//P: { type: "t", value: textureP }
+		index: {type: "i", value: index}
 	};
 
 	return new THREE.ShaderMaterial({

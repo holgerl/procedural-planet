@@ -20,30 +20,6 @@ SS.main.main = function() {
 	
 	SS.util.addResizeListener();
 	SS.main.addSceneContent(scene);
-	
-	var textureMaps = [];
-	var bumpMaps = [];
-	var resolution = 1024;
-	for (var index = 0; index < 6; index++) {
-		window.rtTexture = new THREE.WebGLRenderTarget( resolution, resolution, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat } );
-		var cameraRTT = new THREE.OrthographicCamera( resolution / -2, resolution / 2, resolution / 2, resolution / -2, -10000, 10000 );
-		cameraRTT.position.z = 100;
-		var sceneRTT = new THREE.Scene();
-		var plane = new THREE.PlaneGeometry( resolution, resolution );
-		var quad = new THREE.Mesh( plane, new SS.material.shaderMaterial2(index));
-		quad.position.z = -100;
-		sceneRTT.add( quad );
-		renderer.render( sceneRTT, cameraRTT, rtTexture, true );
-		textureMaps.push(rtTexture);
-		
-		var buf1 = new Uint8Array(resolution * resolution * 4);
-		var gl = renderer.getContext();
-		gl.readPixels( 0, 0, resolution, resolution, gl.RGBA, gl.UNSIGNED_BYTE, buf1 );
-		buf1.needsUpdate = true;
-		bumpMaps.push({image: {data:buf1, height: resolution, width: resolution}});
-	}
-	
-	scene.add(new SS.planet.Planet(5, textureMaps, bumpMaps));
 
 	SS.main.render();
 }
@@ -69,7 +45,34 @@ SS.main.addSceneContent = function(scene) {
 	sunLight.position.set(100, 0, 0);
 	scene.add(sunLight);
 	
-	//scene.add(new SS.planet.Planet(5));
+	var textureMaps = [];
+	var bumpMaps = [];
+	var resolution = 1024;
+	for (var index = 0; index < 6; index++) {
+		var texture = new THREE.WebGLRenderTarget(resolution, resolution, {minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat});
+		
+		var textureCamera = new THREE.OrthographicCamera(-resolution/2, resolution/2, resolution/2, -resolution/2, -100, 100);
+		textureCamera.position.z = 10;
+		
+		var textureScene = new THREE.Scene();
+		var plane = new THREE.Mesh(
+			new THREE.PlaneGeometry(resolution, resolution), 
+			new SS.material.shaderMaterial2(index)
+		);
+		plane.position.z = -10;
+		textureScene.add(plane);
+		
+		renderer.render(textureScene, textureCamera, texture, true);
+		
+		var buffer = new Uint8Array(resolution * resolution * 4);
+		var gl = renderer.getContext();
+		gl.readPixels( 0, 0, resolution, resolution, gl.RGBA, gl.UNSIGNED_BYTE, buffer);
+		
+		textureMaps.push(texture);
+		bumpMaps.push({image: {data: buffer, height: resolution, width: resolution}});
+	}
+	
+	scene.add(new SS.planet.Planet(5, textureMaps, bumpMaps));
 	
 	//scene.add(new SS.starbox.StarBox(4000));
 }
