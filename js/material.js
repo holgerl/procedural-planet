@@ -95,7 +95,7 @@ SS.material.shaderMaterial = function(textureMap, bumpMap) {
 	});
 }
 
-SS.material.shaderMaterial2 = function(index) {
+SS.material.textureGeneratorMaterial = function(index) {
 	var vertexShader = "\
 		varying vec2 vUv;\
 		\

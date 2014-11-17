@@ -45,9 +45,18 @@ SS.main.addSceneContent = function(scene) {
 	sunLight.position.set(100, 0, 0);
 	scene.add(sunLight);
 	
+	var maps = SS.main.generateTextures();
+	
+	scene.add(new SS.planet.Planet(5, maps.textureMaps, maps.bumpMaps));
+	
+	//scene.add(new SS.starbox.StarBox(4000));
+}
+
+SS.main.generateTextures = function() {
 	var textureMaps = [];
 	var bumpMaps = [];
 	var resolution = 1024;
+	
 	for (var index = 0; index < 6; index++) {
 		var texture = new THREE.WebGLRenderTarget(resolution, resolution, {minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat});
 		
@@ -57,7 +66,7 @@ SS.main.addSceneContent = function(scene) {
 		var textureScene = new THREE.Scene();
 		var plane = new THREE.Mesh(
 			new THREE.PlaneGeometry(resolution, resolution), 
-			new SS.material.shaderMaterial2(index)
+			new SS.material.textureGeneratorMaterial(index)
 		);
 		plane.position.z = -10;
 		textureScene.add(plane);
@@ -71,8 +80,5 @@ SS.main.addSceneContent = function(scene) {
 		textureMaps.push(texture);
 		bumpMaps.push({image: {data: buffer, height: resolution, width: resolution}});
 	}
-	
-	scene.add(new SS.planet.Planet(5, textureMaps, bumpMaps));
-	
-	//scene.add(new SS.starbox.StarBox(4000));
+	return {textureMaps: textureMaps, bumpMaps: bumpMaps};
 }
