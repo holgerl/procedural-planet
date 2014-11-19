@@ -84,7 +84,7 @@ SS.material.shaderMaterial = function(textureMap, bumpMap) {
 	var uniforms = {
 		"pointLightPosition": {"type": "v3", "value": sunLight.position},
 		"map": {"type": "t", "value": textureMap},
-		"normalMap": {"type": "t", "value": SS.util.heightToNormalMap(bumpMap, 2.0)}
+		"normalMap": {"type": "t", "value": SS.util.heightToNormalMap(bumpMap, 4.0)}
 	};
 
 	return new THREE.ShaderMaterial({

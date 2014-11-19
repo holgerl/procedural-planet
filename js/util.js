@@ -232,9 +232,9 @@ SS.util.heightToNormalMap = function(map, intensity) {
         var pixel10 = new THREE.Vector3(1, 0, getHeight(x+1, y));
         var orto = pixel10.sub(pixel00).cross(pixel01.sub(pixel00)).normalize();
         
-        normalMap.image.data[i*3+0] = (orto.x+0.5)*255;
-		normalMap.image.data[i*3+1] = (orto.y+0.5)*255;
-		normalMap.image.data[i*3+2] = (-orto.z)*255;
+        normalMap.image.data[i*3+0] = (orto.x/2+0.5)*255;
+		normalMap.image.data[i*3+1] = (orto.y/2+0.5)*255;
+		normalMap.image.data[i*3+2] = (orto.z/2+0.5)*255;
     }
     
     return normalMap;
